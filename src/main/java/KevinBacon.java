@@ -29,26 +29,62 @@ public class KevinBacon {
             movie.setCoappearances(actorList);
         }
         coappearancesMapping = setMappings(actorList);
-        findBaconNumber(actorList.get(0), actorList, coappearancesMapping);
-        System.out.println(actorList.get(0).getBaconNumber() + " " + actorList.get(1).getBaconNumber());
+        System.out.println("Enter an actor to find his/her Bacon number: ");
 
+        Scanner inputScan = new Scanner(System.in);
+        String actorName = inputScan.nextLine();
+        Actor selectedActor = findActorByName(actorName, actorList);
+        findBaconNumber(selectedActor, actorList, coappearancesMapping);
+        findInfBaconNumber(selectedActor, actorList);
 
+        for(Actor actor: actorList){
+            System.out.println("Name: " + actor.getFirstName() + " Bacon #:" + actor.getBaconNumber());
+        }
+
+    }
+    public static Actor findActorByName(String actorName, List<Actor> actorList){
+        for(Actor actor: actorList){
+            if(actorName.equals(actor.getFirstName())){
+                return actor;
+            }
+        }
+        return null;
     }
     public static void findBaconNumber(Actor selectedActor, List<Actor> actorList, Map<Actor, List<Actor>> coappMapping){
+        Queue<Actor> actorQueue = new LinkedList<>();
+
+        selectedActor.setBaconNumber(0);
+        selectedActor.setHasBaconNumber(true);
+        actorQueue.add(selectedActor);
+
+        System.out.println("Traversing the nodes are started.");
+
+        while(!actorQueue.isEmpty()){
+            Actor currentActor = actorQueue.poll();
+
+            for(Actor actor: currentActor.getCoappearenceList()){
+                if(!actor.hasBaconNumber()){
+                    actor.setBaconNumber(currentActor.getBaconNumber()+1);
+                    actor.setHasBaconNumber(true);
+                    actorQueue.add(actor);
+
+
+                }
+            }
+        }
+
 
     }
-    public static void findBaconNumberHelper(List<Actor> coActorList, List<Actor> allActorList, int baconNumber){
-        for(Actor coActor: coActorList){
-            if(!coActor.hasBaconNumber()){
-                coActor.setBaconNumber(baconNumber);
-                coActor.setHasBaconNumber(true);
-         }
-        }
-        baconNumber++;
-        for(Actor coActor: coActorList) {
-            findBaconNumberHelper(coActor.getCoappearenceList(), allActorList, baconNumber);
+    public static void findInfBaconNumber(Actor selectedActor, List<Actor> actorList){
+        for(Actor actor: actorList){
+            if(actor.getBaconNumber() == 0 && !actor.getFirstName().equals(selectedActor.getFirstName())){
+                actor.setBaconNumber(-1);
+                actor.setHasBaconNumber(true);
+            }
+
         }
     }
+
     public static Map<Actor, List<Actor>> setMappings(List<Actor> actorList){
         Map<Actor, List<Actor>> coappearanceMap = new HashMap<>();
         for(Actor actor: actorList){
