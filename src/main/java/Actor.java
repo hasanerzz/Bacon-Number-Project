@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Actor {
@@ -5,6 +6,7 @@ public class Actor {
     private List<Actor> coappearenceList;
     private int baconNumber;
     private boolean hasBaconNumber;
+    private Actor baconConnection;
 
     public Actor(){
 
@@ -12,6 +14,7 @@ public class Actor {
     public Actor(String firstName, List<Actor> coappearenceList){
         this.firstName = firstName;
         this.coappearenceList = coappearenceList;
+
     }
 
     public int getBaconNumber() {
@@ -39,9 +42,7 @@ public class Actor {
     public void setCoappearenceList(List<Actor> coappearenceList) {
         this.coappearenceList = coappearenceList;
     }
-    public void addCoappearenceActor(Actor actor){
-        this.coappearenceList.add(actor);
-    }
+
     public void addCoappearenceActorList(List<Actor> actorList){
         for(int i = 0 ; i < actorList.size(); i++){
             if(this == actorList.get(i)){
@@ -54,4 +55,13 @@ public class Actor {
     public String getFirstName() {
         return firstName;
     }
+
+    public Actor getBaconConnection() {
+        return baconConnection;
+    }
+
+    public void setBaconConnection(Actor baconConnection) {
+        this.baconConnection = baconConnection;
+    }
+
 }
