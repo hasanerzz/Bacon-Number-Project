@@ -4,18 +4,17 @@ import java.util.*;
 
 public class KevinBacon {
     public static void main(String[] args) {
-        Map<Actor, List<Actor>> coappearancesMapping = new HashMap<>();
         List<Actor> actorList = new ArrayList<>();
         List<Movie> movieList = new ArrayList<>();
 
 
         try{
-            Scanner scan = new Scanner(new File("./src/main/resources/test-sample.txt"));
+            Scanner scan = new Scanner(new File("./src/main/java/test-sample.txt"));
             while(scan.hasNextLine()) {
                 Actor actor = new Actor(scan.nextLine(), new ArrayList<>());
                 actorList.add(actor);
             }
-            scan = new Scanner(new File("./src/main/resources/movies.txt"));
+            scan = new Scanner(new File("./src/main/java/movies.txt"));
             while(scan.hasNextLine()){
                 String movieTitleAndActors = scan.nextLine();
                 Movie movie = new Movie();
@@ -28,12 +27,35 @@ public class KevinBacon {
         for (Movie movie : movieList) {
             movie.setCoappearances(actorList);
         }
-        coappearancesMapping = setMappings(actorList);
-        System.out.println("Enter an actor to find his/her Bacon number: ");
+
+
 
         Scanner inputScan = new Scanner(System.in);
-        String actorName = inputScan.nextLine();
-        Actor selectedActor = findActorByName(actorName, actorList);
+        Actor selectedActor = null;
+
+
+        while (selectedActor == null) {
+            try {
+                System.out.println("Enter an actor to find his/her Bacon number: ");
+                String actorName = inputScan.nextLine();
+
+                selectedActor = findActorByName(actorName, actorList);
+
+
+                if (selectedActor == null) {
+                    throw new IllegalArgumentException("Actor '" + actorName + "' not found in the database.");
+                }
+
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error: " + e.getMessage());
+                System.out.println("Please check the spelling and try again.\n");
+            } catch (Exception e) {
+                System.out.println("An unexpected error occurred. Please try again.");
+                inputScan.next();
+            }
+        }
+
+
         findBaconNumber(selectedActor);
         findInfBaconNumber(selectedActor, actorList);
         printBaconNumFreq(actorList);
@@ -125,14 +147,6 @@ public class KevinBacon {
             }
 
         }
-    }
-
-    public static Map<Actor, List<Actor>> setMappings(List<Actor> actorList){
-        Map<Actor, List<Actor>> coappearanceMap = new HashMap<>();
-        for(Actor actor: actorList){
-            coappearanceMap.put(actor, actor.getCoappearenceList());
-        }
-        return coappearanceMap;
     }
     }
 
